@@ -35,6 +35,7 @@ export class TargetObj implements ITarget {
       //   this.targetType = new ExStandard()
       // case 'Star':
       //   this.targetType = new ExStandard()
+      break;
       default:
         instance = new ExStandard(target,opt,tOpt)
         break

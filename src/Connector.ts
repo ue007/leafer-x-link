@@ -235,7 +235,8 @@ export class LeaferXQnConnector extends Arrow  {
       }
     }
     
-    this.path = this.drawPath(point1, point2) 
+    this.path = this.drawPath(point1, point2) ;
+    
     if(typeof(this.opt?.onDraw) == 'function'){   // 自定义回调函数
       this.path = this.opt.onDraw({
         s:point1,
