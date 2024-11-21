@@ -7,14 +7,14 @@ const box2 = new Box({
     y: 0,
     // width: 100,
     // height: 100,
-    fill: "rgba(100,0,0,0.5)",
+    fill: "rgba(100,0,0,0.0)",
     cornerRadius: 20,
     overflow: "hide",
     children: [
         {
             tag: 'Text',
-            width: 100,
-            height: 100,
+            // width: 100,
+            // height: 100,
             text: 'Link',
             fill: 'black',
             padding: [0, 0],
