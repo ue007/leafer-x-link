@@ -1,4 +1,5 @@
 export { LeaferXQnConnector } from './Connector'
+export { Link } from './Link'
 
 export {
     IConnectorOption, IConnectorType, ISideType, IDirection,

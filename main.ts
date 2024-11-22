@@ -1,8 +1,8 @@
 import { Leafer, Group, Rect, Ellipse, Box, Text } from 'leafer-ui'
-import { LeaferXQnConnector, IConnectorOption } from "./src/index";
+import { Link, IConnectorOption } from "./src/index";
 const leafer = new Leafer({ view: window })
 
-const box2 = new Box({
+const label = new Box({
     x: 0,
     y: 0,
     // width: 100,
@@ -24,23 +24,24 @@ const box2 = new Box({
     ],
     draggable: true,
 });
-leafer.add(box2);
-box2.zIndex = 2;
+leafer.add(label);
+label.zIndex = 2;
 
-const elipse = new Box({
-    x: 0,
-    y: 0,
-    width: 100,
-    height: 100,
+const fromNode = new Box({
+    x: 100,
+    y: 100,
+    // width: 100,
+    // height: 30,
     fill: '#cdcdcd',
     draggable: true,
     stroke: '#000000',
     strokeWidth: 1,
+    cornerRadius:20,
     children: [
         {
             tag: 'Text',
             width: 100,
-            height: 100,
+            height: 30,
             text: 'From Node',
             fill: 'black',
             padding: [0, 0],
@@ -50,20 +51,21 @@ const elipse = new Box({
     ],
 });
 
-const rect = new Box({
+const toNode = new Box({
     x: 400,
     y: 400,
-    width: 100,
-    height: 100,
+    // width: 100,
+    // height: 30,
     fill: '#cdcdcd',
     draggable: true,
     stroke: '#000000',
     strokeWidth: 1,
+    cornerRadius:20,
     children: [
         {
             tag: 'Text',
             width: 100,
-            height: 100,
+            height: 30,
             text: 'To Node',
             fill: 'black',
             padding: [0, 0],
@@ -91,34 +93,29 @@ const opt: IConnectorOption = {
         // text,
         leafer
     },
+    name:"link",
     onDraw: (param) => {
         console.log(`param::`, param)
         const startP = param.s.linkPoint;
         const endP = param.e.linkPoint;
         const centerP = { x: (startP.x + endP.x) / 2, y: (startP.y + endP.y) / 2 };
         console.log(centerP);
-        const bounds = box2.boxBounds;
+        const bounds = label.boxBounds;
         console.log(bounds);
-        box2.x = centerP.x - bounds.width / 2;
-        box2.y = centerP.y - bounds.height / 2;
+        label.x = centerP.x - bounds.width / 2;
+        label.y = centerP.y - bounds.height / 2;
         // box2.x = centerP.x ;
         // box2.y = centerP.y ;
         return param.path;
     }
 }
 
-const conn = new LeaferXQnConnector(elipse, rect, opt);
+const conn = new Link(fromNode, toNode, opt);
 conn.name = "link";
-console.log(conn)
+conn.curve = true;
 
-const group = new Group({
-    x: 0,
-    y: 0
-})
-
-group.add(rect);
-group.add(elipse);
-leafer.add(group);
-group.add(conn);
+leafer.add(toNode);
+leafer.add(fromNode);
+leafer.add(conn);
 
 console.log(leafer)

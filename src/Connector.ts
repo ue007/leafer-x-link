@@ -23,6 +23,7 @@ export class LeaferXQnConnector extends Arrow  {
     this.obj2 = new TargetObj(target2,opt,opt?.opt2);
     this.opt = opt;
     this.type = opt?.type || 'default';
+    this.name = opt?.name;
     
     this.strokeWidth = 3;
     this.stroke= 'rgb(50,89,34)';

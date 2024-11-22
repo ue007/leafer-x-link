@@ -26,6 +26,7 @@ export interface IConnectorOption {
   etc?:any
   boundType?:IBoundsType
   onDraw?:FOnDrowCallback
+  name?: string 
 }
 
 export interface ITargetPlugin {
