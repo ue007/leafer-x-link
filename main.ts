@@ -96,9 +96,11 @@ const opt: IConnectorOption = {
         const startP = param.s.linkPoint;
         const endP = param.e.linkPoint;
         const centerP = { x: (startP.x + endP.x) / 2, y: (startP.y + endP.y) / 2 };
-        box2.x = centerP.x - box2.width/2;
-        box2.y = centerP.y - box2.height/2;
-        // console.log(centerP);
+        console.log(centerP);
+        const bounds = box2.boxBounds;
+        console.log(bounds);
+        box2.x = centerP.x - bounds.width / 2;
+        box2.y = centerP.y - bounds.height / 2;
         // box2.x = centerP.x ;
         // box2.y = centerP.y ;
         return param.path;

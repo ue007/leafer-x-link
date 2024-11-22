@@ -42,7 +42,7 @@ export class LeaferXQnConnector extends Arrow  {
       }
     });
 
-    this._draw();
+    // this._draw();
     this._draw();    //fix:第一次加载的时候有描边的情况下获取不到外边框问题
 
     // 在构造函数的末尾返回一个代理对象
