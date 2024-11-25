@@ -2,30 +2,6 @@ import { Leafer, Group, Rect, Ellipse, Box, Text } from 'leafer-ui'
 import { Link, IConnectorOption } from "./src/index";
 const leafer = new Leafer({ view: window })
 
-const label = new Box({
-    x: 0,
-    y: 0,
-    // width: 100,
-    // height: 100,
-    fill: "rgba(100,0,0,0.0)",
-    cornerRadius: 20,
-    overflow: "hide",
-    children: [
-        {
-            tag: 'Text',
-            // width: 100,
-            // height: 100,
-            text: 'Link',
-            fill: 'black',
-            padding: [0, 0],
-            textAlign: "center",
-            verticalAlign: "middle",
-        },
-    ],
-    draggable: true,
-});
-leafer.add(label);
-label.zIndex = 2;
 
 const fromNode = new Box({
     x: 100,
@@ -75,19 +51,47 @@ const toNode = new Box({
     ],
 });
 
+
+const label = new Box({
+    x: 0,
+    y: 0,
+    // width: 100,
+    // height: 100,
+    fill: "rgba(100,0,0,0.0)",
+    cornerRadius: 20,
+    overflow: "hide",
+    children: [
+        {
+            tag: 'Text',
+            // width: 100,
+            // height: 100,
+            text: 'Link',
+            fill: 'black',
+            padding: [0, 0],
+            textAlign: "center",
+            verticalAlign: "middle",
+        },
+    ],
+    draggable: true,
+});
+leafer.add(label);
+label.zIndex = 2;
+
 const opt: IConnectorOption = {
     opt1: {
-        // side: 'b',
-        arrow: 'square',
+        side: 'b',
+        // arrow: 'square',
         // margin:25,
+        padding:50,
     },
     opt2: {
-        // side: 't',
+        side: 't',
         // percent: 0.8,
         arrow: 'triangle',
         // margin:5,
+        padding:100,
     },
-    padding: 20,
+    // padding: 100,
     // margin:10,
     etc: {
         // text,
@@ -110,12 +114,10 @@ const opt: IConnectorOption = {
     }
 }
 
-const conn = new Link(fromNode, toNode, opt);
-conn.name = "link";
-conn.curve = true;
+const link = new Link(fromNode, toNode, opt);
+link.name = "link";
+link.curve = true;
 
 leafer.add(toNode);
 leafer.add(fromNode);
-leafer.add(conn);
-
-console.log(leafer)
+leafer.add(link);

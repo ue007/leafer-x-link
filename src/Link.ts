@@ -13,42 +13,41 @@ export class Link extends Arrow {
   obj2: TargetObj;
   opt: IConnectorOption
   path: string = ""
-  renderCount: number
+  // renderCount: number
   type: IConnectorType
   direction: IDirection  // 两对象之间的方向
 
   constructor(target1: ConnectorTarget, target2: ConnectorTarget, opt?: IConnectorOption) {
     super();
+
     this.obj1 = new TargetObj(target1, opt, opt?.opt1);
     this.obj2 = new TargetObj(target2, opt, opt?.opt2);
+    
     this.opt = opt;
     this.type = opt?.type || 'default';
     this.name = opt?.name;
 
     this.strokeWidth = 3;
-    this.stroke = 'rgb(50,89,34)';
+    this.stroke = 'rgb(255,0,0)';
     this.direction = this.setDirection(target1, target2);
-
+   
     const that = this;
-
-    if (this.name) {
-      console.log(this.name);
-    }
 
     target1.on(MoveEvent.DRAG, function (e: PointerEvent) {
       if (e.type === MoveEvent.DRAG) {
-        that._draw();
+        that._generatePath();
       }
     });
 
     target2.on(MoveEvent.DRAG, function (e: PointerEvent) {
       if (e.type === MoveEvent.DRAG) {
-        that._draw()
+        that._generatePath()
       }
     });
 
-    // this._draw();
-    this._draw();    //fix:第一次加载的时候有描边的情况下获取不到外边框问题
+    // this.points = [0, 90, 20, 60, 40, 80, 60, 40, 75, 50, 90, 10, 100, 90];
+    // this.curve = true;
+    this._generatePath();
 
     // 在构造函数的末尾返回一个代理对象
     return new Proxy(this, {
@@ -57,20 +56,28 @@ export class Link extends Arrow {
 
   }
 
-  drawPath(s: IConnectorPoint, e: IConnectorPoint): string {
+  calculatePath(s: IConnectorPoint, e: IConnectorPoint): string {
+    let points = [];
     let s1 = `M ${s.linkPoint.x} ${s.linkPoint.y}`
+    points.push(s.linkPoint.x,s.linkPoint.y);
 
     let s2 = ` L ${s.padding.x} ${s.padding.y}`
+    points.push(s.padding.x,s.padding.y);
     if (s.pathPoint?.x && s.pathPoint?.y) {
       s2 += ` L ${s.pathPoint.x} ${s.pathPoint.y}`
+      points.push(s.pathPoint.x,s.pathPoint.y);
     }
 
     let e2 = ''
     if (e.pathPoint?.x && e.pathPoint?.y) {
       e2 = ` L ${e.pathPoint.x} ${e.pathPoint.y}`
+      points.push(e.pathPoint.x,e.pathPoint.y);
     }
     e2 += ` L ${e.padding.x} ${e.padding.y}`
+    points.push(e.padding.x,e.padding.y);
     let e1 = ` L ${e.linkPoint.x} ${e.linkPoint.y}`
+    points.push(e.linkPoint.x,e.linkPoint.y);
+    this.points = points;
     return `${s1}${s2}${e2}${e1}`
   }
 
@@ -137,18 +144,21 @@ export class Link extends Arrow {
     }
   }
 
-  _draw() {
-    this.renderCount = 0
+  _generatePath() {
+    // this.renderCount = 0
     this.setValidSide();
+    
     var pdPoints1 = this.obj1.updateValidPoints(this.obj2)
     var pdPoints2 = this.obj2.updateValidPoints(this.obj1)
+    
     if (pdPoints1.length == 0 || pdPoints2.length == 0) {
       this.path = 'M 0 0 Z'
-      return
+      return;
     }
 
     var distance = 0
-    var point1, point2: IConnectorPoint
+    var point1, point2: IConnectorPoint;
+
     for (const p1 of pdPoints1) {
       for (const p2 of pdPoints2) {
         let d2 = calcDistance(p1.padding, p2.padding)
@@ -159,9 +169,9 @@ export class Link extends Arrow {
         }
       }
     }
-    // this.curve = true;
     point1.angle = calcAngle(point1.anglePoint, point1.padding, point2.padding)
     point2.angle = calcAngle(point2.anglePoint, point2.padding, point1.padding)
+    
     const getLen: (a: number, b: number) => number = (a, b) => {
       if (a > b) {
         return a - b
@@ -241,16 +251,17 @@ export class Link extends Arrow {
       }
     }
 
-    this.path = this.drawPath(point1, point2);
+    this.calculatePath(point1, point2);
+    // this.path = this.calculatePath(point1, point2);
     // this.path = 'M945.344 586.304c-13.056-93.44-132.48-98.048-132.48-98.048 0-29.888-39.808-47.424-39.808-47.424L201.664 440.832c-36.736 0-42.112 51.264-42.112 51.264 7.68 288 181.44 382.976 181.44 382.976l299.456 0c42.88-31.36 101.888-122.56 101.888-122.56 9.216 3.072 72.768-0.832 97.984-6.144C865.6 740.992 958.336 679.68 945.344 586.304zM365.568 825.28c-145.472-105.664-130.944-328.576-130.944-328.576l80.448 0c-44.416 126.4 43.648 285.696 55.872 307.904C383.232 826.816 365.568 825.28 365.568 825.28zM833.472 694.272c-37.568 22.272-65.152 7.68-65.152 7.68 39.04-54.4 42.112-159.296 42.112-159.296 6.848 2.304 12.288-26.048 61.312 23.744C920.768 616.128 871.04 672.064 833.472 694.272z M351.68 129.856c0 0-119.424 72.832-44.416 140.928 75.008 68.16 68.16 93.44 24.512 153.216 0 0 81.92-41.344 71.168-104.192s-89.6-94.208-72.768-137.792C347.136 138.304 351.68 129.856 351.68 129.856z M615.232 91.648c0 0-119.488 72.832-44.352 140.928 74.944 68.16 68.032 93.44 24.448 153.216 0 0 81.984-41.344 71.232-104.192-10.688-62.784-89.6-94.208-72.832-137.792C610.624 100.032 615.232 91.648 615.232 91.648z M491.136 64c0 0-74.304 6.144-88.128 78.144C389.248 214.144 435.968 240.96 471.936 276.992 507.904 312.96 492.608 380.352 452.032 427.904c0 0 72.768-25.344 89.6-94.976 16.832-69.76-17.344-94.272-52.8-134.784C453.312 157.504 456.64 83.968 491.136 64z';
-    // this.points = [200,200,200,250,400,200,500,300];
+    // this.points = [0, 90, 20, 60, 40, 80, 60, 40, 75, 50, 90, 10, 100, 90];
     
-    if (typeof (this.opt?.onDraw) == 'function') {   // 自定义回调函数
-      this.path = this.opt.onDraw({
+    if (typeof (this.opt?.onDraw) == 'function') {   
+      this.opt.onDraw({
         s: point1,
         e: point2,
         path: this.path
-      })
+      });
     }
     this.startArrow = this.obj1.arrowType;
     this.endArrow = this.obj2.arrowType;
