@@ -258,7 +258,7 @@ export class Link extends Arrow {
     // this.points = [0, 90, 20, 60, 40, 80, 60, 40, 75, 50, 90, 10, 100, 90];
     
     if (typeof (this.opt?.onDraw) == 'function') {   
-      this.opt.onDraw({
+      this.path = this.opt.onDraw({
         s: point1,
         e: point2,
         path: this.path,
