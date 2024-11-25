@@ -1,6 +1,7 @@
 import { Ellipse, Rect, Polygon, Star } from "@leafer-ui/core"
 import { IPointData,IBoundsType,ILayoutBoundsData } from '@leafer/interface/types'
 import { IArrowType } from '@leafer-ui/interface';
+import { Link } from "./Link";
 
 export type IConnectorPoint = {
   linkPoint:IPointData,
@@ -127,5 +128,6 @@ export type FGetRectPoint = (r:Rect, side: ISideType, percent?: number) => IPoin
 export type FOnDrowCallback = (param:{
   s:IConnectorPoint,
   e:IConnectorPoint,
-  path:string
+  path:string,
+  source?:Link
 })=>string
